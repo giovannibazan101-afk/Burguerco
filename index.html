@@ -65,40 +65,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   flex-shrink:0;
 }
 .logo span{color:var(--red);}
-.nav-links{
-  display:flex;align-items:center;gap:4px;
-  flex:1;justify-content:center;
-}
-.nav-item{position:relative;}
-.nav-btn{
-  background:none;border:none;color:var(--text2);
-  font-family:inherit;font-size:.9rem;font-weight:600;
-  padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;
-  transition:color .2s,background .2s;white-space:nowrap;
-  display:flex;align-items:center;gap:6px;
-}
-.nav-btn:hover{color:var(--text);background:var(--bg3);}
-.nav-btn svg{width:14px;height:14px;opacity:.6;transition:transform .2s;}
-.nav-item:hover .nav-btn svg{transform:rotate(180deg);}
-.dropdown{
-  position:absolute;top:calc(100% + 8px);left:0;
-  background:#fff;border:1.5px solid var(--border-strong);
-  border-radius:var(--radius);padding:8px;
-  min-width:200px;
-  opacity:0;pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s,transform .2s;
-  box-shadow:0 8px 24px rgba(180,120,0,0.15);
-  z-index:100;
-}
-.nav-item:hover .dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
-.dropdown a{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:var(--radius-sm);
-  color:var(--text2);font-size:.9rem;text-decoration:none;
-  transition:background .2s,color .2s;
-}
-.dropdown a:hover{background:var(--bg3);color:var(--text);}
+/* nav-links removed - filtros pills ya cubren esta función */
 .header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .cart-btn{
   position:relative;
@@ -401,7 +368,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 ══════════════════════════════════════════ */
 .modal-overlay{
   position:fixed;inset:0;z-index:1000;
-  background:rgba(80,50,0,.35);backdrop-filter:blur(8px);
+  background:rgba(80,50,0,.4);backdrop-filter:blur(8px);
   display:flex;align-items:flex-end;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity .25s;
 }
@@ -410,10 +377,21 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   background:#fff;border:1.5px solid var(--border-strong);
   border-radius:24px 24px 0 0;
   width:min(560px,100vw);max-height:92vh;overflow-y:auto;
-  transform:translateY(40px);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  transform:translateY(60px);transition:transform .3s cubic-bezier(.32,.72,0,1);
   box-shadow:0 -8px 40px rgba(180,120,0,0.2);
+  overscroll-behavior:contain;
 }
 .modal-overlay.open .modal-box{transform:translateY(0);}
+/* Desktop: modal centrado */
+@media(min-width:769px){
+  .modal-overlay{align-items:center;}
+  .modal-box{
+    border-radius:24px;
+    transform:translateY(0) scale(.95);
+    max-height:88vh;
+  }
+  .modal-overlay.open .modal-box{transform:scale(1);}
+}
 .modal-handle{
   width:40px;height:4px;background:var(--bg4);border-radius:2px;
   margin:12px auto 0;
@@ -774,26 +752,154 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
    FAB CARRITO MOBILE
 ══════════════════════════════════════════ */
 #cartFab{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
   background:var(--red);border:none;border-radius:100px;
   color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:.95rem;
-  padding:14px 28px;cursor:pointer;z-index:800;
+  padding:14px 28px;cursor:pointer;z-index:850;
   display:none;align-items:center;gap:10px;
-  box-shadow:0 8px 32px rgba(192,37,27,0.35),0 4px 16px rgba(0,0,0,.15);
-  transition:all .2s;
+  box-shadow:0 8px 32px rgba(192,37,27,0.4),0 4px 16px rgba(0,0,0,.2);
+  transition:all .2s;white-space:nowrap;
 }
-#cartFab:hover{transform:translateX(-50%) translateY(-2px);}
+#cartFab:active{transform:translateX(-50%) scale(.97);}
+
+/* ══════════════════════════════════════════
+   MOBILE (<= 768px)
+══════════════════════════════════════════ */
 @media(max-width:768px){
-  #cartFab{display:flex;}
+
+  /* — Header — */
+  #header{
+    padding:0 14px;
+    height:56px;
+    gap:10px;
+  }
+  .logo{font-size:1.35rem;}
+  /* Ocultar texto "Carrito" en header, solo mostrar ícono + badge */
   .cart-btn .btn-text{display:none;}
-  .nav-links{display:none;}
-  #filterBar{flex-wrap:wrap;}
-  #searchInput{width:100%;}
-  .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
-  .card-img-wrap{height:140px;}
-  .ingredient-list{grid-template-columns:1fr;}
+  .cart-btn{padding:10px 12px;}
+  /* Ocultar "Mis pedidos" en header en mobile, usar el FAB */
+  .my-orders-btn{display:none;}
+  /* Chip usuario más compacto */
+  .user-chip{padding:5px 10px 5px 5px;font-size:.8rem;}
+
+  /* — Filter bar — */
+  #filterBar{
+    top:56px; /* coincidir con nueva altura del header */
+    padding:8px 14px;
+    gap:8px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #filterBar::-webkit-scrollbar{height:0;}
+  /* Search ocupa su propia línea: se pone como flex-shrink:0 y ancho automático */
+  .search-wrap{flex-shrink:0;width:auto;}
+  #searchInput{
+    width:140px;
+    font-size:16px; /* evita zoom automático en iOS */
+    padding:9px 14px 9px 34px;
+  }
+  #searchInput:focus{width:160px;}
+  .result-count{display:none;} /* ahorra espacio */
+
+  /* — Catálogo — */
+  #catalog{padding:20px 12px 100px;} /* padding-bottom para que FAB no tape último producto */
+
+  /* — Grilla 2 columnas fijas — */
+  .products-grid{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  /* — Tarjeta — */
+  .card-img-wrap{height:110px;}
+  .card-img-placeholder{font-size:3rem;}
+  .card-body{padding:10px 10px 10px;}
+  .card-title{font-size:.88rem;white-space:normal;line-height:1.2;margin-bottom:4px;}
+  .card-desc{font-size:.74rem;-webkit-line-clamp:2;margin-bottom:8px;}
+  .card-stock{font-size:.72rem;margin-bottom:8px;}
+  .card-badge{font-size:.6rem;padding:3px 7px;}
+
+  /* Card bottom: precio arriba, controles abajo en columna */
+  .card-bottom{
+    flex-direction:column;
+    align-items:stretch;
+    gap:7px;
+    margin-top:6px;
+  }
+  .card-price{font-size:1.05rem;}
+
+  /* Botones qty más grandes para touch */
+  .qty-ctrl{padding:3px;justify-content:space-between;}
+  .qty-btn{
+    width:34px;height:34px;
+    font-size:1.15rem;
+    border-radius:7px;
+    /* área táctil mínima recomendada 44px — padding compensa */
+    padding:5px;
+  }
+  .qty-num{min-width:26px;font-size:.9rem;}
+
+  /* Botón Agregar ocupa todo el ancho */
+  .add-btn{
+    width:100%;
+    padding:9px 6px;
+    font-size:.82rem;
+    border-radius:var(--radius-sm);
+  }
+
+  /* — FAB visible — */
+  #cartFab{display:flex;}
+
+  /* — Modales: bottom-sheet más alta — */
+  .modal-box{
+    max-height:88vh;
+    border-radius:20px 20px 0 0;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+  .modal-header{padding:16px 16px 0;}
+  .modal-body{padding:14px 16px 36px;}
+
+  /* Inputs sin zoom en iOS */
+  .form-input,.form-select,.form-textarea,.notas-input{
+    font-size:16px;
+    padding:13px 14px;
+  }
   .form-row{grid-template-columns:1fr;}
-  .hero-title{font-size:2.8rem;}
+  .delivery-opt{padding:14px 10px;}
+  .delivery-opt .d-icon{font-size:1.6rem;}
+
+  /* Ingredientes en 1 col */
+  .ingredient-list{grid-template-columns:1fr;}
+
+  /* Punto de cocción: wrap */
+  .coccion-list{flex-wrap:wrap;gap:6px;}
+  .coccion-opt{flex:none;min-width:calc(33.3% - 4px);text-align:center;}
+
+  /* Hero más compacto */
+  #hero{min-height:auto;padding:48px 16px;}
+  .hero-title{font-size:2.6rem;}
+  .hero-sub{font-size:.85rem;margin-bottom:24px;}
+  .hero-bg-text{font-size:clamp(5rem,28vw,10rem);}
+  .hero-cta{padding:13px 24px;font-size:.95rem;}
+
+  /* How it works: 2 col */
+  .steps{grid-template-columns:1fr 1fr;gap:12px;}
+  .step{padding:18px 14px;}
+  .step-num{font-size:2.2rem;}
+
+  /* Footer compacto */
+  .footer-top{grid-template-columns:1fr 1fr;gap:20px;}
+  #footer{padding:32px 16px 24px;margin-bottom:72px;}
+
+  /* Toast no se superponga con FAB */
+  #toastContainer{bottom:84px;right:12px;left:12px;align-items:flex-end;}
+  .toast{max-width:100%;}
+
+  /* Cart items más compactos */
+  .cart-item{padding:10px;}
+  .cart-qty-btn{width:30px;height:30px;}
 }
 
 /* ══════════════════════════════════════════
@@ -863,39 +969,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <!-- ═══ HEADER ═══ -->
 <header id="header">
   <div class="logo">BURGER<span>CO</span></div>
-  <nav class="nav-links">
-    <div class="nav-item">
-      <button class="nav-btn">🍔 Hamburguesas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="dropdown">
-        <a href="#" onclick="filterCat('HAMBURGUESAS');return false">🥩 Clásicas</a>
-        <a href="#" onclick="filterCat('HAMBURGUESAS');return false">⭐ Premium</a>
-        <a href="#" onclick="filterCat('COMBOS');return false">🔥 Combos del día</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-btn">🍟 Acompañamientos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="dropdown">
-        <a href="#" onclick="filterCat('EXTRAS');return false">🍟 Papas fritas</a>
-        <a href="#" onclick="filterCat('EXTRAS');return false">🧅 Aros de cebolla</a>
-        <a href="#" onclick="filterCat('EXTRAS');return false">🍗 Nuggets</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-btn">🥤 Bebidas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="dropdown">
-        <a href="#" onclick="filterCat('BEBIDAS');return false">🥤 Gaseosas</a>
-        <a href="#" onclick="filterCat('BEBIDAS');return false">🧃 Jugos</a>
-        <a href="#" onclick="filterCat('BEBIDAS');return false">🍦 Milkshakes</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-btn">🍨 Postres <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="dropdown">
-        <a href="#" onclick="filterCat('POSTRES');return false">🍦 Helados</a>
-        <a href="#" onclick="filterCat('POSTRES');return false">🎂 Tortas</a>
-      </div>
-    </div>
-  </nav>
   <div class="header-right">
     <div class="user-chip" id="userChip" style="display:none">
       <div class="user-avatar" id="userAvatar">?</div>
@@ -1248,7 +1321,9 @@ function makeCard(p){
   const div = document.createElement('div');
   div.className = 'product-card' + (p.stock===0?' out-of-stock':'');
   div.onclick = (e) => {
-    if(e.target.classList.contains('qty-btn') || e.target.classList.contains('add-btn')) return;
+    // Ignorar clicks/taps en los controles de cantidad y botón agregar
+    if(e.target.closest('.qty-ctrl') || e.target.closest('.add-btn') || e.target.closest('.card-bottom')) return;
+    if(p.stock === 0) return;
     openCust(p);
   };
 
@@ -1271,7 +1346,7 @@ function makeCard(p){
       <div class="card-title">${p.name}</div>
       <div class="card-desc">${p.descripcion||''}</div>
       ${stockHtml}
-      <div class="card-bottom">
+      <div class="card-bottom" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()">
         <span class="card-price">Gs. ${fmtNum(p.precio)}</span>
         ${p.stock>0 ? `
         <div class="qty-ctrl">
@@ -1303,7 +1378,7 @@ function quickAdd(code){
     openCust(p);
   } else {
     const item = {
-      code:p.code, name:p.name,
+      code:p.code, name:p.name, emoji:p.emoji||'🍔',
       precio_base:p.precio, qty,
       sin_ingredientes:[], extras_seleccionados:[],
       precio_extras:0, precio_total:p.precio*qty,
